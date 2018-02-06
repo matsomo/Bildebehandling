@@ -4,12 +4,14 @@ import numpy
 from skimage import io
 from skimage import exposure
 import os
-import os.path
+import random
  
 imageFile = os.path.abspath("C:/Users/Mats/Desktop/PythonInn/turtle.pgm")
-outFile = os.path.abspath("C:/Users/Mats/Desktop/PythonInn/turtle_out.pgm")
+outFile = os.path.abspath("C:/Users/Mats/Desktop/PythonUt/turtle_out.pgm")
 
 image = skimage.img_as_ubyte(io.imread(imageFile))
+
+histogram = [random.randint(1,255) for _ in range(256)]
 
 # using scikit image
 # equalized = exposure.equalize_hist(image)
@@ -27,16 +29,11 @@ for i in range(height):
   for j in range(width):
     bins[image[i,j]] += 1
 
-# Find cumlated histogram
-ss = [0]*256
-for k in range(256):
-  ss[k] = numpy.uint8(round((255.0/(height*width))*sum(bins[:k]), 0))
-
 # Transform the image by mapping through ss
 out = numpy.zeros((height, width), numpy.uint8)
 for i in range(height):
   for j in range(width):
-    out[i,j] = ss[image[i,j]]
+    out[i,j] = histogram[image[i,j]]
 
 # Save image
 io.imsave(outFile, out)
